@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+    /* ===== ANIMATIONS GÉNÉRALES ===== */
+    body {
+      background: linear-gradient(135deg, #ffd6e8 0%, #ffe4f0 50%, #fff0f6 100%);
+      animation: bgShift 8s ease-in-out infinite;
+    }
+
+    @keyframes bgShift {
+      0%, 100% {
+        background: linear-gradient(135deg, #ffd6e8 0%, #ffe4f0 50%, #fff0f6 100%);
+      }
+      50% {
+        background: linear-gradient(135deg, #ffb3d9 0%, #ffd6e8 50%, #ffe4f0 100%);
+      }
+    }
+
+    /* ===== CARD ANIMATION ===== */
+    #card {
+      animation: cardFloat 3s ease-in-out infinite, cardGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes cardFloat {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes cardGlow {
+      0%, 100% {
+        box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+      }
+      50% {
+        box-shadow: 0 30px 60px rgba(255, 105, 180, 0.5);
+      }
+    }
+
+    /* ===== COEURS QUI MONTENT ===== */
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      animation: float 2s linear forwards, spin 2s linear forwards, pulse 2s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+
+    @keyframes float {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-250px) scale(0.3);
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 0px rgba(255, 105, 180, 0.7));
+      }
+      50% {
+        filter: drop-shadow(0 0 10px rgba(255, 105, 180, 1));
+      }
+    }
+
+    /* ===== SPARKLES (ÉTINCELLES) ===== */
+    .sparkle {
+      position: absolute;
+      pointer-events: none;
+      animation: twinkle 1s ease-in-out forwards;
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0);
+      }
+    }
+
+    /* ===== BOUTONS STYLISÉS ===== */
+    button {
+      transition: all 0.3s ease !important;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    #yesBtn {
+      animation: pulse-btn 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-btn {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.12) !important;
+      box-shadow: 0 10px 25px rgba(244, 114, 182, 0.4) !important;
+    }
+
+    #yesBtn:active {
+      animation: btnClick 0.4s ease !important;
+    }
+
+    #noBtn {
+      animation: none !important;
+    }
+
+    #noBtn:hover {
+      transform: translateX(15px) !important;
+      box-shadow: 0 5px 15px rgba(107, 114, 128, 0.3) !important;
+    }
+
+    @keyframes btnClick {
+      0% {
+        transform: scale(0.95);
+      }
+      100% {
+        transform: scale(1.12);
+      }
+    }
+
+    /* ===== MESSAGE ANIMATION ===== */
+    #message {
+      animation: messageShimmer 2s ease-in-out infinite;
+      background: linear-gradient(90deg, #ff1493, #ff69b4, #ff1493);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @keyframes messageShimmer {
+      0%, 100% {
+        background-position: 0% center;
+      }
+      50% {
+        background-position: 100% center;
+      }
+    }
+
+    /* ===== CONFETTI ===== */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      animation: confetti-fall 3s linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    </style>
+</head>
+<body class="bg-pink-100 h-screen flex items-center justify-center">
+
+  <div id="card" class="bg-white p-10 rounded-2xl shadow-xl text-center relative">
+
+    <h1 id="message" class="text-2xl font-bold mb-6">
+      Veux-tu être ma Valentine ? 🌹
+    </h1>
+
+    <div class="flex gap-8 justify-center items-center">
+
+      <button id="yesBtn"
+        class="bg-pink-500 text-white px-8 py-3 rounded-xl hover:scale-110 transition font-bold text-lg shadow-lg">
+        Oui je le veux ❤️
+      </button>
+
+      <button id="noBtn"
+        class="bg-gray-400 hover:bg-gray-500 text-white px-8 py-3 rounded-xl transition font-bold text-lg shadow-md">
+        Non merci 😔
+      </button>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const message = document.getElementById("message");
+const card = document.getElementById("card");
+
+let texts = [
+  "Pourquoi tu veux pas ? 😢",
+  "Tu es sûre ? 🥺",
+  "Réfléchis bien 😭",
+  "Allez dis oui 😭❤️"
+];
+
+let index = 0;
+
+/* ---- Bouton NON qui fuit ---- */
+noBtn.addEventListener("mouseover", () => {
+
+  // déplacer aléatoirement
+  let x = Math.random() * 300 - 150;
+  let y = Math.random() * 200 - 100;
+
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+  // changer texte
+  if(index < texts.length){
+    noBtn.innerText = texts[index];
+    index++;
+  }
+});
+
+
+/* ---- Fonction pour créer des étincelles ---- */
+function createSparkles() {
+  const sparkleCount = 25;
+  for(let i = 0; i < sparkleCount; i++) {
+    let sparkle = document.createElement("div");
+    sparkle.classList.add("sparkle");
+    sparkle.innerText = "✨";
+    
+    let x = Math.random() * 400 - 200;
+    let y = Math.random() * 300 - 150;
+    
+    sparkle.style.left = "50%";
+    sparkle.style.top = "50%";
+    sparkle.style.setProperty("--tx", x + "px");
+    sparkle.style.setProperty("--ty", y + "px");
+    sparkle.style.fontSize = (Math.random() * 10 + 8) + "px";
+    
+    card.appendChild(sparkle);
+    
+    setTimeout(() => sparkle.remove(), 1000);
+  }
+}
+
+/* ---- Fonction pour créer des emojis d'amour --- */
+function createLoveEmojis() {
+  const emojis = ["❤️", "💕", "💖", "💗", "💝", "🌹", "💐", "🎀"];
+  const emojiCount = 35;
+  
+  for(let i = 0; i < emojiCount; i++) {
+    setTimeout(() => {
+      let emoji = document.createElement("div");
+      emoji.classList.add("heart");
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      emoji.style.left = Math.random() * 300 + "px";
+      emoji.style.top = "300px";
+      emoji.style.fontSize = (Math.random() * 20 + 16) + "px";
+      
+      card.appendChild(emoji);
+      
+      setTimeout(() => emoji.remove(), 2000);
+    }, i * 30);
+  }
+}
+
+/* ---- Fonction pour créer des confettis ---- */
+function createConfetti() {
+  const colors = ["#ff1493", "#ff69b4", "#ffc0cb", "#ffb6c1", "#ff6b9d"];
+  const confettiCount = 50;
+  
+  for(let i = 0; i < confettiCount; i++) {
+    let confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.top = "-10px";
+    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    confetti.style.setProperty("--rotation", Math.random() * 360);
+    confetti.style.borderRadius = Math.random() > 0.5 ? "50%" : "0";
+    
+    document.body.appendChild(confetti);
+    
+    setTimeout(() => confetti.remove(), 3000);
+  }
+}
+
+/* ---- Bouton OUI ---- */
+yesBtn.addEventListener("click", () => {
+
+  // Faire disparaître le bouton Non
+  noBtn.style.display = "none";
+  
+  message.innerText = "Je t'aime mon amour ❤️✨";
+  yesBtn.disabled = true;
+  noBtn.disabled = true;
+
+  createConfetti();
+  createSparkles();
+  createLoveEmojis();
+
+  // Messages progressifs
+  const loveMessages = [
+    "Je t'aime mon amour ❤️✨",
+    "Tu es ma vie 💕",
+    "Tu es la plus belle 💖",
+    "Pourquoi pas beaucoup plus... 💗",
+    "Je t'aime pour toujours Bananee 🌹",
+    "oh que j'aime tes fesses😂🔥",
+  ];
+
+  loveMessages.forEach((msg, idx) => {
+    setTimeout(() => {
+      message.innerText = msg;
+      createSparkles();
+      createLoveEmojis();
+    }, (idx + 1) * 1500);
+  });
+
+  // Animation coeurs augmentée
+  for(let i = 0; i < 40; i++) {
+    setTimeout(() => {
+      let heart = document.createElement("div");
+      heart.innerText = "❤️";
+      heart.classList.add("heart");
+
+      heart.style.left = Math.random() * 300 + "px";
+      heart.style.top = "200px";
+      heart.style.fontSize = (Math.random() * 15 + 15) + "px";
+
+      card.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 2000);
+    }, i * 40);
+  }
+  
+  // Étincelles supplémentaires
+  setTimeout(() => {
+    createSparkles();
+  }, 800);
+});
+
+</script>
+
+</body>
+</html>
